@@ -1,0 +1,124 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database with PostGIS extension
+  postgres:
+    image: postgis/postgis:15-3.3
+    container_name: mikroklima-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: frost
+      POSTGRES_USER: frost
+      POSTGRES_PASSWORD: frost
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mikroklima-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U frost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FROST Server (SensorThings API)
+  frost:
+    image: fraunhoferiosb/frost-server:latest
+    container_name: mikroklima-frost
+    restart: unless-stopped
+    environment:
+      serviceRootUrl: http://localhost:8091/FROST-Server
+      http_cors_enable: "true"
+      http_cors_allowed.origins: "*"
+      persistence_db_driver: org.postgresql.Driver
+      persistence_db_url: jdbc:postgresql://postgres:5432/frost
+      persistence_db_username: frost
+      persistence_db_password: frost
+      persistence_autoUpdateDatabase: "true"
+    ports:
+      - "8091:8080"
+    networks:
+      - mikroklima-net
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # InfluxDB (Time Series Database)
+  influxdb:
+    image: influxdb:2.1.1
+    container_name: mikroklima-influxdb
+    restart: unless-stopped
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: mikroklima123
+      DOCKER_INFLUXDB_INIT_ORG: mikroklima
+      DOCKER_INFLUXDB_INIT_BUCKET: environment
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: mikroklima-super-secret-token
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+    networks:
+      - mikroklima-net
+
+  # Telegraf (Data Collection Agent)
+  telegraf:
+    image: telegraf:1.19
+    container_name: mikroklima-telegraf
+    restart: unless-stopped
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    networks:
+      - mikroklima-net
+    depends_on:
+      - influxdb
+
+  # Grafana (Visualization)
+  grafana:
+    image: grafana/grafana:8.4.3
+    container_name: mikroklima-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: mikroklima
+      GF_INSTALL_PLUGINS: ""
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - mikroklima-net
+    depends_on:
+      - influxdb
+
+  # Thingsboard (IoT Platform)
+  thingsboard:
+    image: thingsboard/tb-postgres:3.6.0
+    container_name: mikroklima-thingsboard
+    restart: unless-stopped
+    ports:
+      - "8080:9090"
+      - "1883:1883"
+      - "5683:5683"
+    environment:
+      TB_QUEUE_TYPE: in-memory
+    volumes:
+      - thingsboard_data:/data
+      - thingsboard_logs:/var/log/thingsboard
+    networks:
+      - mikroklima-net
+
+volumes:
+  postgres_data:
+  influxdb_data:
+  influxdb_config:
+  grafana_data:
+  thingsboard_data:
+  thingsboard_logs:
+
+networks:
+  mikroklima-net:
+    driver: bridge

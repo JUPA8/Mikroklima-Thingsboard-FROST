@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_2af604ba5f4bda6893e9fa53ba0d3912 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.css"/>
+</head>
+<body>
+    
+    
+<div style="position: fixed; 
+            top: 10px; left: 50px; width: 400px; height: 90px; 
+            background-color: white; border:2px solid grey; z-index:9999; 
+            font-size:14px; padding: 10px">
+<b>Mikroklima Hamburg - IoT Project</b><br>
+🟢 Real Data Sources<br>
+🟠 Code Ready (needs configuration)<br>
+🔵 Mock Data (demonstration)
+</div>
+    
+<div style="position: fixed; 
+            bottom: 50px; right: 50px; width: 200px; height: 140px; 
+            background-color: white; border:2px solid grey; z-index:9999; 
+            font-size:12px; padding: 10px">
+<b>Data Sources</b><br>
+<i class="fa fa-map-marker fa-2x" style="color:green"></i> Real Data<br>
+<i class="fa fa-map-marker fa-2x" style="color:orange"></i> Ready<br>
+<i class="fa fa-map-marker fa-2x" style="color:blue"></i> Mock Data<br>
+<br>
+<b>Total:</b> 6 sources<br>
+<b>Real:</b> 2 sources
+</div>
+    
+            <div class="folium-map" id="map_2af604ba5f4bda6893e9fa53ba0d3912" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_2af604ba5f4bda6893e9fa53ba0d3912 = L.map(
+                "map_2af604ba5f4bda6893e9fa53ba0d3912",
+                {
+                    center: [45.0, 15.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 4,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_e57466eaccb02d3e0cb1e0cfb92d2f38 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_e57466eaccb02d3e0cb1e0cfb92d2f38.addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            var marker_1f4122f97ba81520fc02e6caccc19e36 = L.marker(
+                [51.0946, 6.8407],
+                {
+}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            var icon_7bb97c03b7f1f338b5bb38837fc8c0e9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "cloud",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_235deb82092d5259e7d3a045425a7c08 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_22130e4ace8bb84d74d83c3b0902fc3f = $(`<div id="html_22130e4ace8bb84d74d83c3b0902fc3f" style="width: 100.0%; height: 100.0%;">     <div style="width: 250px;">         <h4>Mobilithek Dormagen</h4>         <b>Type:</b> Air Quality<br>         <b>Status:</b> REAL<br>         <b>Location:</b> 51.0946, 6.8407<br>         <b>Data:</b> 11,139 records (PM10, PM2.5, Temp)     </div>     </div>`)[0];
+                popup_235deb82092d5259e7d3a045425a7c08.setContent(html_22130e4ace8bb84d74d83c3b0902fc3f);
+            
+        
+
+        marker_1f4122f97ba81520fc02e6caccc19e36.bindPopup(popup_235deb82092d5259e7d3a045425a7c08)
+        ;
+
+        
+    
+    
+            marker_1f4122f97ba81520fc02e6caccc19e36.bindTooltip(
+                `<div>
+                     Mobilithek Dormagen
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_1f4122f97ba81520fc02e6caccc19e36.setIcon(icon_7bb97c03b7f1f338b5bb38837fc8c0e9);
+            
+    
+            var circle_7833f7215ecb5ac9e53a125de79832cb = L.circle(
+                [51.0946, 6.8407],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.3, "radius": 50000, "stroke": true, "weight": 3}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            var marker_62623506cbd125944cd400b240a5a9da = L.marker(
+                [53.58121, 9.830826],
+                {
+}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            var icon_530c6793f9f00e161c2f4ac34b7eba8f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "thermometer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8316bbd564e8dc39c2575e8023d4fafd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_730e634662860d3812ed76e78024b1f7 = $(`<div id="html_730e634662860d3812ed76e78024b1f7" style="width: 100.0%; height: 100.0%;">     <div style="width: 250px;">         <h4>OpenSenseMap Hamburg</h4>         <b>Type:</b> Weather Station<br>         <b>Status:</b> CODE READY<br>         <b>Location:</b> 53.5812, 9.8308<br>         <b>Data:</b> Simulated (needs active box)     </div>     </div>`)[0];
+                popup_8316bbd564e8dc39c2575e8023d4fafd.setContent(html_730e634662860d3812ed76e78024b1f7);
+            
+        
+
+        marker_62623506cbd125944cd400b240a5a9da.bindPopup(popup_8316bbd564e8dc39c2575e8023d4fafd)
+        ;
+
+        
+    
+    
+            marker_62623506cbd125944cd400b240a5a9da.bindTooltip(
+                `<div>
+                     OpenSenseMap Hamburg
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_62623506cbd125944cd400b240a5a9da.setIcon(icon_530c6793f9f00e161c2f4ac34b7eba8f);
+            
+    
+            var circle_add328a0de8f121b9966817f326a780a = L.circle(
+                [53.58121, 9.830826],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.3, "radius": 50000, "stroke": true, "weight": 3}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            var marker_419306c147c49b98395a6cb2cd322837 = L.marker(
+                [53.6332, 9.9881],
+                {
+}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            var icon_7ce303971760dd5430d999a89ebf8d90 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "cloud-sun",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f1d7d866deb946fb42835aa98f1d7a14 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2e9a698e6ad68b81ceea11b9db421561 = $(`<div id="html_2e9a698e6ad68b81ceea11b9db421561" style="width: 100.0%; height: 100.0%;">     <div style="width: 250px;">         <h4>DWD Hamburg-Fuhlsbüttel</h4>         <b>Type:</b> Official Weather<br>         <b>Status:</b> MOCK<br>         <b>Location:</b> 53.6332, 9.9881<br>         <b>Data:</b> Mock data (7 measurements)     </div>     </div>`)[0];
+                popup_f1d7d866deb946fb42835aa98f1d7a14.setContent(html_2e9a698e6ad68b81ceea11b9db421561);
+            
+        
+
+        marker_419306c147c49b98395a6cb2cd322837.bindPopup(popup_f1d7d866deb946fb42835aa98f1d7a14)
+        ;
+
+        
+    
+    
+            marker_419306c147c49b98395a6cb2cd322837.bindTooltip(
+                `<div>
+                     DWD Hamburg-Fuhlsbüttel
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_419306c147c49b98395a6cb2cd322837.setIcon(icon_7ce303971760dd5430d999a89ebf8d90);
+            
+    
+            var circle_19ec143cb829f52b9ff3fce903637bf0 = L.circle(
+                [53.6332, 9.9881],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.3, "radius": 50000, "stroke": true, "weight": 3}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            var marker_64abc7ef781784e936b7a03d42d91243 = L.marker(
+                [52.2799, 8.0472],
+                {
+}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            var icon_b687ba06866e445f791fcd98ff215ca9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "tree",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7c450486007803561aef5173342a3066 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b0b54432c9cafa8947a033168be87d7b = $(`<div id="html_b0b54432c9cafa8947a033168be87d7b" style="width: 100.0%; height: 100.0%;">     <div style="width: 250px;">         <h4>UDP Osnabrück</h4>         <b>Type:</b> Microclimate<br>         <b>Status:</b> MOCK<br>         <b>Location:</b> 52.2799, 8.0472<br>         <b>Data:</b> Mock data (4 measurements)     </div>     </div>`)[0];
+                popup_7c450486007803561aef5173342a3066.setContent(html_b0b54432c9cafa8947a033168be87d7b);
+            
+        
+
+        marker_64abc7ef781784e936b7a03d42d91243.bindPopup(popup_7c450486007803561aef5173342a3066)
+        ;
+
+        
+    
+    
+            marker_64abc7ef781784e936b7a03d42d91243.bindTooltip(
+                `<div>
+                     UDP Osnabrück
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_64abc7ef781784e936b7a03d42d91243.setIcon(icon_b687ba06866e445f791fcd98ff215ca9);
+            
+    
+            var circle_903ee27ba00cbe03476ffea2c640b631 = L.circle(
+                [52.2799, 8.0472],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.3, "radius": 50000, "stroke": true, "weight": 3}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            var marker_39557d1317576c012ea29190bf24e856 = L.marker(
+                [30.0444, 31.2357],
+                {
+}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            var icon_abf25b94f832e6ee36052a755d6e5ae9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "globe",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_034d3f7efea1ed4d826181a84b54da5e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1abb0d1a153ab756a97fc7a21a92ab1c = $(`<div id="html_1abb0d1a153ab756a97fc7a21a92ab1c" style="width: 100.0%; height: 100.0%;">     <div style="width: 250px;">         <h4>Open-Meteo Cairo</h4>         <b>Type:</b> Weather API<br>         <b>Status:</b> REAL<br>         <b>Location:</b> 30.0444, 31.2357<br>         <b>Data:</b> 192 records (Temp, Humidity, Pressure, Wind)     </div>     </div>`)[0];
+                popup_034d3f7efea1ed4d826181a84b54da5e.setContent(html_1abb0d1a153ab756a97fc7a21a92ab1c);
+            
+        
+
+        marker_39557d1317576c012ea29190bf24e856.bindPopup(popup_034d3f7efea1ed4d826181a84b54da5e)
+        ;
+
+        
+    
+    
+            marker_39557d1317576c012ea29190bf24e856.bindTooltip(
+                `<div>
+                     Open-Meteo Cairo
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_39557d1317576c012ea29190bf24e856.setIcon(icon_abf25b94f832e6ee36052a755d6e5ae9);
+            
+    
+            var circle_e8b20bafa1a5313a59e5db43281dfd97 = L.circle(
+                [30.0444, 31.2357],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.3, "radius": 100000, "stroke": true, "weight": 3}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            var marker_64ee2d905dcc05f53015f27c2a9559b9 = L.marker(
+                [36.8065, 10.1815],
+                {
+}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            var icon_7ec903d855869a80434c74f51d5b65c3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "cloud",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b6bdb7b1cf1b0fd32e65795c6f38ec0d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e8d242d56976c0229f28c19971410f13 = $(`<div id="html_e8d242d56976c0229f28c19971410f13" style="width: 100.0%; height: 100.0%;">     <div style="width: 250px;">         <h4>Tunisia (Mock)</h4>         <b>Type:</b> Weather Station<br>         <b>Status:</b> MOCK<br>         <b>Location:</b> 36.8065, 10.1815<br>         <b>Data:</b> Mock data (5 measurements)     </div>     </div>`)[0];
+                popup_b6bdb7b1cf1b0fd32e65795c6f38ec0d.setContent(html_e8d242d56976c0229f28c19971410f13);
+            
+        
+
+        marker_64ee2d905dcc05f53015f27c2a9559b9.bindPopup(popup_b6bdb7b1cf1b0fd32e65795c6f38ec0d)
+        ;
+
+        
+    
+    
+            marker_64ee2d905dcc05f53015f27c2a9559b9.bindTooltip(
+                `<div>
+                     Tunisia (Mock)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_64ee2d905dcc05f53015f27c2a9559b9.setIcon(icon_7ec903d855869a80434c74f51d5b65c3);
+            
+    
+            var circle_70133b16d903fcf45982d2a5da7a032c = L.circle(
+                [36.8065, 10.1815],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.3, "radius": 100000, "stroke": true, "weight": 3}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            var rectangle_216d5e682de2566035abc7af5dd31d1a = L.rectangle(
+                [[47.3, 5.9], [55.1, 15.0]],
+                {"bubblingMouseEvents": true, "color": "gray", "dashArray": "5", "dashOffset": null, "fill": false, "fillColor": "gray", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+    
+            L.control.fullscreen(
+                {
+  "position": "topleft",
+  "title": "Full Screen",
+  "titleCancel": "Exit Full Screen",
+  "forceSeparateButton": false,
+}
+            ).addTo(map_2af604ba5f4bda6893e9fa53ba0d3912);
+        
+</script>
+</html>

@@ -1,0 +1,10 @@
+Metrik,Wert
+Stadt,Casablanca
+Land,Marokko
+Zeitraum,2025-12-01 bis 2025-12-14
+n (Stunden),320
+MAE (°C),0.56
+Bias (°C),+0.55
+RMSE (°C),0.64
+Korrelation (r),0.996
+p-Wert,0.00e+00

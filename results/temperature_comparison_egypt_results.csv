@@ -3,8 +3,8 @@ Stadt,Cairo
 Land,Egypt
 Zeitraum,2025-12-01 bis 2025-12-14
 n (Stunden),320
-MAE (°C),1.25
-Bias (°C),+1.25
-RMSE (°C),1.30
+MAE (°C),0.75
+Bias (°C),+0.75
+RMSE (°C),0.83
 Korrelation (r),0.997
 p-Wert,0.00e+00

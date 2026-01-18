@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Mikroklima Marokko - Temperaturvergleich
+Mikroklima Egypt - Temperaturvergleich
 =========================================
 Vergleicht OpenSenseMap (Citizen Science) mit Open-Meteo ERA5 (Referenz)
-für die Stadt Casablanca, Marokko.
+für die Stadt Cairo, Egypt.
 
 Zeitraum: 14 Tage (01.12. - 14.12.2025)
 Variable: Temperatur (°C)
@@ -23,28 +23,28 @@ warnings.filterwarnings('ignore')
 # KONFIGURATION
 # =============================================================================
 
-# Stadt: Casablanca, Marokko
-CITY = "Casablanca"
-COUNTRY = "Marokko"
+# Stadt: Cairo, Egypt
+CITY = "Cairo"
+COUNTRY = "Egypt"
 
 # Zeitraum: 14 Tage
 START_DATE = "2025-12-01"
 END_DATE = "2025-12-14"
 
-# Koordinaten Casablanca
-CASABLANCA_LAT = 33.5731
-CASABLANCA_LON = -7.5898
+# Koordinaten Cairo
+CAIRO_LAT = 30.0444
+CAIRO_LON = 31.2357
 
-# Alternative: Marrakech
-MARRAKECH_LAT = 31.6295
-MARRAKECH_LON = -7.9811
+# Alternative: Alexandria
+ALEXANDRIA_LAT = 31.2001
+ALEXANDRIA_LON = 29.9187
 
 # =============================================================================
 # SCHRITT 1: DATENQUELLEN DEFINIEREN
 # =============================================================================
 
 print("=" * 70)
-print("MIKROKLIMA MAROKKO - TEMPERATURVERGLEICH")
+print("MIKROKLIMA EGYPT - TEMPERATURVERGLEICH")
 print("=" * 70)
 print(f"\nStadt: {CITY}, {COUNTRY}")
 print(f"Zeitraum: {START_DATE} bis {END_DATE}")
@@ -59,7 +59,7 @@ print("""
 ┌────────────────────────────────────────────────────────────────────┐
 │  QUELLE A: OpenSenseMap (Citizen Science)                          │
 │  - Typ: Community-basierte Sensoren                                │
-│  - Hinweis: Keine aktiven Stationen in Casablanca verfügbar        │
+│  - Hinweis: Keine aktiven Stationen in Cairo verfügbar             │
 │  → Alternative: Simulierte Citizen Science Daten basierend auf     │
 │    typischen Sensorabweichungen (+0.5 bis +2.0°C)                  │
 ├────────────────────────────────────────────────────────────────────┤
@@ -146,7 +146,7 @@ print("-" * 40)
 
 # Versuche aktuelle Daten, sonst nehme ältere
 try:
-    era5_df = fetch_openmeteo_data(CASABLANCA_LAT, CASABLANCA_LON, START_DATE, END_DATE)
+    era5_df = fetch_openmeteo_data(CAIRO_LAT, CAIRO_LON, START_DATE, END_DATE)
     if era5_df is None or len(era5_df) == 0:
         raise Exception("Keine Daten")
 except:
@@ -155,23 +155,23 @@ except:
     # Nehme Daten von vor einer Woche
     alt_end = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
     alt_start = (datetime.now() - timedelta(days=21)).strftime("%Y-%m-%d")
-    era5_df = fetch_openmeteo_data(CASABLANCA_LAT, CASABLANCA_LON, alt_start, alt_end)
+    era5_df = fetch_openmeteo_data(CAIRO_LAT, CAIRO_LON, alt_start, alt_end)
 
 if era5_df is None:
-    # Fallback: Generiere synthetische Daten basierend auf Casablanca-Klima
+    # Fallback: Generiere synthetische Daten basierend auf Cairo-Klima
     print("\n  ! API nicht erreichbar - generiere realistische Testdaten")
     dates = pd.date_range(start=START_DATE, end=END_DATE, freq='h', tz='UTC')
-    
-    # Casablanca Dezember: ~15°C Mittel, ~10°C nachts, ~20°C tags
+
+    # Cairo Dezember: ~18°C Mittel, ~12°C nachts, ~24°C tags
     hours = dates.hour
-    daily_cycle = 5 * np.sin((hours - 6) * np.pi / 12)  # Max um 15h, Min um 3h
-    
+    daily_cycle = 6 * np.sin((hours - 6) * np.pi / 12)  # Max um 15h, Min um 3h
+
     # Leichte Tagesvariabilität
     daily_variation = np.random.normal(0, 1.5, len(dates) // 24 + 1)
     daily_variation = np.repeat(daily_variation, 24)[:len(dates)]
-    
-    base_temp = 15 + daily_cycle + daily_variation + np.random.normal(0, 0.5, len(dates))
-    
+
+    base_temp = 18 + daily_cycle + daily_variation + np.random.normal(0, 0.5, len(dates))
+
     era5_df = pd.DataFrame({
         'timestamp_utc': dates.tz_localize(None),
         'temperature': base_temp
@@ -205,19 +205,19 @@ def standardize_data(df, source, station_id, lat, lon):
 
 # Standardisieren
 era5_std = standardize_data(
-    era5_df, 
-    'openmeteo_era5', 
-    'ERA5_CASA', 
-    CASABLANCA_LAT, 
-    CASABLANCA_LON
+    era5_df,
+    'openmeteo_era5',
+    'ERA5_CAIRO',
+    CAIRO_LAT,
+    CAIRO_LON
 )
 
 osm_std = standardize_data(
     osm_df,
     'opensensemap_sim',
-    'OSM_CASA_01',
-    CASABLANCA_LAT + 0.01,  # Leicht versetzt
-    CASABLANCA_LON + 0.01
+    'OSM_CAIRO_01',
+    CAIRO_LAT + 0.01,  # Leicht versetzt
+    CAIRO_LON + 0.01
 )
 
 print(f"""
@@ -251,24 +251,24 @@ print("=" * 70)
 print("""
 FROST SensorThings Struktur:
 ┌─────────────────────────────────────────────────────────────────────┐
-│ Thing: "Casablanca Citizen Science Station"                         │
-│   └─ Location: {33.58°N, -7.58°W}                                   │
+│ Thing: "Cairo Citizen Science Station"                              │
+│   └─ Location: {30.04°N, 31.24°E}                                   │
 │   └─ Datastream: "Temperatur"                                       │
-│        └─ Observations: [(2025-12-01T00:00Z, 15.3), ...]           │
+│        └─ Observations: [(2025-12-01T00:00Z, 18.3), ...]           │
 ├─────────────────────────────────────────────────────────────────────┤
-│ Thing: "Open-Meteo ERA5 Casablanca"                                 │
-│   └─ Location: {33.57°N, -7.59°W}                                   │
+│ Thing: "Open-Meteo ERA5 Cairo"                                      │
+│   └─ Location: {30.04°N, 31.24°E}                                   │
 │   └─ Datastream: "Temperatur"                                       │
-│        └─ Observations: [(2025-12-01T00:00Z, 14.1), ...]           │
+│        └─ Observations: [(2025-12-01T00:00Z, 17.1), ...]           │
 └─────────────────────────────────────────────────────────────────────┘
 
 InfluxDB Line Protocol:
 ┌─────────────────────────────────────────────────────────────────────┐
-│ microclimate,source=opensensemap_sim,station=OSM_CASA_01            │
-│   temperature=15.3 1701388800000000000                              │
+│ microclimate,source=opensensemap_sim,station=OSM_CAIRO_01           │
+│   temperature=18.3 1701388800000000000                              │
 │                                                                     │
-│ microclimate,source=openmeteo_era5,station=ERA5_CASA                │
-│   temperature=14.1 1701388800000000000                              │
+│ microclimate,source=openmeteo_era5,station=ERA5_CAIRO               │
+│   temperature=17.1 1701388800000000000                              │
 └─────────────────────────────────────────────────────────────────────┘
 """)
 
@@ -377,8 +377,8 @@ ax3.grid(True, alpha=0.3)
 ax3.set_aspect('equal', adjustable='box')
 
 plt.tight_layout()
-plt.savefig('temperature_comparison_morocco.png', dpi=150, bbox_inches='tight')
-print("  ✓ Gespeichert: temperature_comparison_morocco.png")
+plt.savefig('results/temperature_comparison_egypt.png', dpi=150, bbox_inches='tight')
+print("  ✓ Gespeichert: results/temperature_comparison_egypt.png")
 
 # =============================================================================
 # SCHRITT 7: INTERPRETATION
@@ -447,8 +447,8 @@ summary = pd.DataFrame({
     'Metrik': ['Stadt', 'Land', 'Zeitraum', 'n (Stunden)', 'MAE (°C)', 'Bias (°C)', 'RMSE (°C)', 'Korrelation (r)', 'p-Wert'],
     'Wert': [CITY, COUNTRY, f"{START_DATE} bis {END_DATE}", len(merged_clean), f"{mae:.2f}", f"{bias:+.2f}", f"{rmse:.2f}", f"{correlation:.3f}", f"{p_value:.2e}"]
 })
-summary.to_csv('temperature_comparison_morocco_results.csv', index=False)
-print("\n  ✓ Ergebnisse gespeichert: temperature_comparison_morocco_results.csv")
+summary.to_csv('results/temperature_comparison_egypt_results.csv', index=False)
+print("\n  ✓ Ergebnisse gespeichert: results/temperature_comparison_egypt_results.csv")
 
 print("\n" + "=" * 70)
 print("ANALYSE ABGESCHLOSSEN")

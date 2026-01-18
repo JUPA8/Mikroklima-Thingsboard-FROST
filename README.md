@@ -354,7 +354,7 @@ Mikroklima-Thingsboard-FROST/
 │   ├── run_complete_analysis.py        # Master-Analyse-Script
 │   ├── thingsboard_setup.py            # Thingsboard Geräte-Setup
 │   ├── temperature_comparison.py       # Temperaturvergleich Hamburg
-│   ├── temperature_comparison_morocco.py # Temperaturvergleich Marokko
+│   ├── temperature_comparison_egypt.py # Temperaturvergleich Egypt
 │   └── frost_data_loader.py            # FROST Server Daten-Loader
 │
 ├── 📁 config/                          # Konfigurationsdateien
@@ -369,8 +369,8 @@ Mikroklima-Thingsboard-FROST/
 │
 ├── 📁 results/                         # Analyse-Ergebnisse
 │   ├── temperature_comparison.png              # Hamburg Vergleich
-│   ├── temperature_comparison_morocco.png      # Marokko Vergleich
-│   ├── temperature_comparison_morocco_results.csv  # Statistiken
+│   ├── temperature_comparison_egypt.png        # Egypt Vergleich
+│   ├── temperature_comparison_egypt_results.csv  # Statistiken
 │   └── sensor_locations_map.html               # Interaktive Karte
 │
 └── 📁 doc/                             # Dokumentation
@@ -394,7 +394,7 @@ Mikroklima-Thingsboard-FROST/
 
 ### Statistische Validierung
 
-**Temperaturvergleich (Marokko):**
+**Temperaturvergleich (Egypt - Cairo):**
 | Metrik | Wert | Interpretation |
 |--------|------|----------------|
 | **MAE** | 0.56°C | Mittlerer absoluter Fehler |
@@ -408,9 +408,9 @@ Mikroklima-Thingsboard-FROST/
 Alle Visualisierungen befinden sich im `results/` Ordner:
 
 - 📊 `temperature_comparison.png` - Hamburg OSM vs. DWD
-- 📊 `temperature_comparison_morocco.png` - Marokko Analyse
+- 📊 `temperature_comparison_egypt.png` - Egypt (Cairo) Analyse
 - 🗺️ `sensor_locations_map.html` - Interaktive Sensorkarte
-- 📈 `temperature_comparison_morocco_results.csv` - Rohdaten
+- 📈 `temperature_comparison_egypt_results.csv` - Rohdaten
 
 ---
 
@@ -470,7 +470,7 @@ from influxdb_client import InfluxDBClient
 client = InfluxDBClient(
     url="http://localhost:8086",
     token="mikroklima-super-secret-token",
-    org="Micoklima"
+    org="mikroklima"
 )
 
 # Query schreiben

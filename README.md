@@ -394,10 +394,10 @@ Mikroklima-Thingsboard-FROST/
 **Temperaturvergleich (Egypt - Cairo):**
 | Metrik | Wert | Interpretation |
 |--------|------|----------------|
-| **MAE** | 0.56°C | Mittlerer absoluter Fehler |
-| **RMSE** | 0.64°C | Root Mean Square Error |
-| **Bias** | +0.55°C | Systematische Abweichung |
-| **Korrelation** | 0.996 | Sehr hohe Korrelation |
+| **MAE** | 0.75°C | Mittlerer absoluter Fehler |
+| **RMSE** | 0.83°C | Root Mean Square Error |
+| **Bias** | +0.75°C | Systematische Abweichung |
+| **Korrelation** | 0.997 | Sehr hohe Korrelation (99.7%) |
 | **p-Wert** | 0.00 | Statistisch signifikant |
 
 ### Visualisierungen

@@ -1,0 +1,15 @@
+Metrik,Wert
+Standort A,OpenSenseMap Hamburg
+Standort B,Mobilithek Dormagen
+Entfernung (km),350
+Zeitraum,2026-01-10 bis 2026-01-15
+Anzahl Messpaare,144
+MAE (°C),1.54
+RMSE (°C),1.61
+Bias (°C),-1.54
+Korrelation (r),0.997
+p-Wert,7.00e-161
+Max. Abweichung (°C),2.81
+Standardabweichung (°C),0.47
+Mittel OSM (°C),3.01
+Mittel MOB (°C),4.55

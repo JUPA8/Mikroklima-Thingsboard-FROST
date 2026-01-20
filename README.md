@@ -357,7 +357,7 @@ Mikroklima-Thingsboard-FROST/
 │   ├── generate_location_map.py        # Interaktive Karte erstellen
 │   ├── run_complete_analysis.py        # Master-Analyse-Script
 │   ├── thingsboard_setup.py            # Thingsboard Geräte-Setup
-│   ├── temperature_comparison.py       # Temperaturvergleich Hamburg
+│   ├── temperature_comparison_germany.py # Vergleich OpenSenseMap vs Mobilithek
 │   ├── temperature_comparison_egypt.py # Temperaturvergleich Egypt
 │   └── frost_data_loader.py            # FROST Server Daten-Loader
 │
@@ -372,9 +372,10 @@ Mikroklima-Thingsboard-FROST/
 │   └── DATA_QUALITY_SUMMARY.txt        # Qualitätsbericht Zusammenfassung
 │
 ├── 📁 results/                         # Analyse-Ergebnisse
-│   ├── temperature_comparison.png              # Hamburg Vergleich
+│   ├── temperature_comparison.png              # Germany: OSM vs Mobilithek
 │   ├── temperature_comparison_egypt.png        # Egypt Vergleich
-│   ├── temperature_comparison_egypt_results.csv  # Statistiken
+│   ├── temperature_comparison_germany_results.csv # Germany Statistiken
+│   ├── temperature_comparison_egypt_results.csv  # Egypt Statistiken
 │   └── sensor_locations_map.html               # Interaktive Karte
 │
 └── 📁 doc/                             # Dokumentation
@@ -392,13 +393,14 @@ Mikroklima-Thingsboard-FROST/
 
 | Quelle | Records | Zeitraum | Vollständigkeit | Status |
 |--------|---------|----------|-----------------|--------|
+| **OpenSenseMap Hamburg** | Real-time | Kontinuierlich | - | ✅ OPERATIONAL |
 | **Mobilithek Dormagen** | 11,139 | 7 Tage | 85.7% | ✅ GOOD |
 | **Open-Meteo Egypt** | 192 | 8 Tage | 114.3% | ✅ EXCELLENT |
 | **Gesamt** | 11,331+ | - | - | ✅ OPERATIONAL |
 
 ### Statistische Validierung
 
-**Temperaturvergleich (Egypt - Cairo):**
+**1. Temperaturvergleich (Egypt - Cairo):**
 | Metrik | Wert | Interpretation |
 |--------|------|----------------|
 | **MAE** | 0.75°C | Mittlerer absoluter Fehler |
@@ -407,14 +409,25 @@ Mikroklima-Thingsboard-FROST/
 | **Korrelation** | 0.997 | Sehr hohe Korrelation (99.7%) |
 | **p-Wert** | 0.00 | Statistisch signifikant |
 
+**2. Citizen Science Vergleich (Germany - OpenSenseMap Hamburg vs Mobilithek Dormagen):**
+| Metrik | Wert | Interpretation |
+|--------|------|----------------|
+| **MAE** | 1.54°C | Mittlerer absoluter Fehler |
+| **RMSE** | 1.61°C | Root Mean Square Error |
+| **Bias** | -1.54°C | Hamburg kühler als Dormagen |
+| **Korrelation** | 0.997 | Sehr hohe Korrelation (99.7%) |
+| **p-Wert** | 7.00e-161 | Hochsignifikant |
+| **Entfernung** | 350 km | Verschiedene Klimaregionen |
+
 ### Visualisierungen
 
 Alle Visualisierungen befinden sich im `results/` Ordner:
 
-- 📊 `temperature_comparison.png` - Hamburg OSM vs. DWD
-- 📊 `temperature_comparison_egypt.png` - Egypt (Cairo) Analyse
+- 📊 `temperature_comparison.png` - Germany: OpenSenseMap Hamburg vs Mobilithek Dormagen
+- 📊 `temperature_comparison_egypt.png` - Egypt (Cairo) Validierung
 - 🗺️ `sensor_locations_map.html` - Interaktive Sensorkarte
-- 📈 `temperature_comparison_egypt_results.csv` - Rohdaten
+- 📈 `temperature_comparison_germany_results.csv` - Germany Rohdaten
+- 📈 `temperature_comparison_egypt_results.csv` - Egypt Rohdaten
 
 ---
 

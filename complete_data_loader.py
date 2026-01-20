@@ -367,23 +367,31 @@ def push_to_thingsboard(source, measurements):
             'Mobilithek Dormagen': 'DWD_01975',
             'Open-Meteo Egypt': 'Egypt',
         }
-        
+
         device_key = device_key_map.get(source)
         if not device_key or device_key not in TB_DEVICE_TOKENS:
             return False
-        
+
         access_token = TB_DEVICE_TOKENS[device_key]
         url = f"{TB_URL}/api/v1/{access_token}/telemetry"
-        
+
         telemetry = {}
         for m in measurements:
+            # Skip invalid values (NaN, None, inf)
+            value = m['value']
+            if value is None or (isinstance(value, float) and (value != value or value == float('inf') or value == float('-inf'))):
+                continue
+
             key = f"{m['sensor_type']}_{m['unit']}".replace(' ', '_').replace('/', '_')
-            telemetry[key] = m['value']
-        
+            telemetry[key] = value
+
+        if not telemetry:
+            return False
+
         response = requests.post(url, json=telemetry, timeout=10)
         response.raise_for_status()
         return True
-        
+
     except Exception as e:
         print(f"   Thingsboard error: {e}")
         return False

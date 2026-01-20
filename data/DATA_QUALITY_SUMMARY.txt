@@ -1,4 +1,4 @@
-Generated: 2026-01-17 14:46:28
+Generated: 2026-01-19 (Updated)
 
 MOBILITHEK DORMAGEN:
   ✓ 11,139 records
@@ -7,6 +7,12 @@ MOBILITHEK DORMAGEN:
 OPEN-METEO EGYPT:
   ✓ 192 records
   ✓ Completeness: 114.3%
+
+STATISTICAL VALIDATION (Egypt - Cairo):
+  ✓ Correlation: 0.997 (99.7%)
+  ✓ MAE: 0.75°C
+  ✓ RMSE: 0.83°C
+  ✓ Bias: +0.75°C
 
 OVERALL QUALITY: EXCELLENT
 Total measurements: 11,331

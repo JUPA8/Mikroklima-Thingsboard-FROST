@@ -108,7 +108,7 @@ time: timestamp_utc
 
 ## 7. Visualisierung
 
-![Temperaturvergleich](temperature_comparison.png)
+![Temperaturvergleich](results/temperature_comparison.png)
 
 **Grafik 1:** Zeitreihenvergleich beider Quellen
 **Grafik 2:** Differenz (OSM - DWD) mit Bias-Linie

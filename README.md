@@ -69,10 +69,10 @@ Dieses Projekt demonstriert eine **professionelle IoT-Datenintegration** mit dre
 ## 🏗️ Architektur
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│                            DATENQUELLEN (6)                                  │
+│                            DATENQUELLEN (5)                                  │
 ├──────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
-│  🟢 REAL DATA (3):                    🔵 DEMO DATA (3):                      │
+│  🟢 REAL DATA (3):                    🔵 DEMO DATA (2):                      │
 │  ┌────────────────────┐              ┌──────────────────┐                   │
 │  │ OpenSenseMap       │              │ DWD Station      │                   │
 │  │ Hamburg            │              │ Hamburg          │                   │
@@ -84,10 +84,10 @@ Dieses Projekt demonstriert eine **professionelle IoT-Datenintegration** mit dre
 │  │ Dormagen           │              │ (Simulation)     │                   │
 │  │ 11,139 records     │              └──────────────────┘                   │
 │  │ PM10, PM2.5, Temp  │                                                     │
-│  └────────────────────┘              ┌──────────────────┐                   │
-│  ┌────────────────────┐              │ Tunisia          │                   │
-│  │ Open-Meteo         │              │ (Simulation)     │                   │
-│  │ Egypt (Cairo)      │              └──────────────────┘                   │
+│  └────────────────────┘                                                     │
+│  ┌────────────────────┐                                                     │
+│  │ Open-Meteo         │                                                     │
+│  │ Egypt (Cairo)      │                                                     │
 │  │ 192 records        │                                                     │
 │  │ Weather data       │                                                     │
 │  └────────────────────┘                                                     │
@@ -101,7 +101,7 @@ Dieses Projekt demonstriert eine **professionelle IoT-Datenintegration** mit dre
 │  ┌────────────────────────────────────────────────────────────────────┐     │
 │  │              complete_data_loader.py                               │     │
 │  │                                                                    │     │
-│  │  • Fetch data from 6 sources                                       │     │
+│  │  • Fetch data from 3 real sources (OpenSenseMap, Mobilithek, Egypt)│     │
 │  │  • Transform & validate                                            │     │
 │  │  • Push to 3 platforms simultaneously                              │     │
 │  │  • Error handling & logging                                        │     │
@@ -275,9 +275,26 @@ docker compose down -v
 
 ## 📡 Datenquellen
 
-### 🟢 Real Data Sources (2)
+### 🟢 Real Data Sources (3)
 
-#### 1. Mobilithek Dormagen
+#### 1. OpenSenseMap Hamburg
+| Parameter | Wert |
+|-----------|------|
+| **Quelle** | OpenSenseMap API (opensensemap.org) |
+| **Standort** | Hamburg Iserbrook-Ost (53.58°N, 9.83°E) |
+| **Box-ID** | 67937b67c326f20007ef99ca |
+| **Variablen** | PM10, PM2.5, Temperatur, Luftfeuchtigkeit, Luftdruck |
+| **Update** | ~5 Minuten (Echtzeit) |
+| **Status** | ✅ Operational |
+
+**Verfügbare Sensoren:**
+- `PM10` - Feinstaub ≤10µm (µg/m³)
+- `PM2.5` - Feinstaub ≤2.5µm (µg/m³)
+- `Temperature` - Lufttemperatur (°C)
+- `Humidity` - Relative Luftfeuchtigkeit (%)
+- `Pressure` - Luftdruck (hPa)
+
+#### 2. Mobilithek Dormagen
 | Parameter | Wert |
 |-----------|------|
 | **Quelle** | sensor.community (luftdaten.info) |
@@ -293,7 +310,7 @@ docker compose down -v
 - `Temperature` - Lufttemperatur (°C)
 - `Humidity` - Relative Luftfeuchtigkeit (%)
 
-#### 2. Open-Meteo Egypt (Cairo)
+#### 3. Open-Meteo Egypt (Cairo)
 | Parameter | Wert |
 |-----------|------|
 | **Quelle** | Open-Meteo Weather API |
@@ -310,12 +327,7 @@ docker compose down -v
 - `wind_speed_10m` - Windgeschwindigkeit 10m (km/h)
 - `wind_direction_10m` - Windrichtung (°)
 
-### 🔵 Demo Data Sources (4)
-
-#### 3. OpenSenseMap Hamburg
-- **Status:** Code implementiert, benötigt aktive Box-ID
-- **Typ:** Citizen Science Wetterstation
-- **Standort:** Hamburg Iserbrook-Ost (53.58°N, 9.83°E)
+### 🔵 Demo Data Sources (2)
 
 #### 4. DWD Hamburg-Fuhlsbüttel
 - **Status:** Simulierte Daten
@@ -326,11 +338,6 @@ docker compose down -v
 - **Status:** Simulierte Daten
 - **Typ:** Universitäts-Mikroklima-Sensoren
 - **Standort:** Osnabrück Campus (52.28°N, 8.05°E)
-
-#### 6. Tunisia
-- **Status:** Simulierte Daten
-- **Typ:** Internationale Wetterstation
-- **Standort:** Tunis (36.81°N, 10.18°E)
 
 ---
 

@@ -12,9 +12,7 @@ from datetime import datetime, timezone
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 
-# ============================================================================
 # CONFIGURATION
-# ============================================================================
 
 # InfluxDB Configuration
 INFLUXDB_URL = "http://localhost:8086"
@@ -50,7 +48,7 @@ OPEN_METEO_EGYPT = {
     "location": "Cairo, Egypt"
 }
 
-# Load Thingsboard credentials
+# Load Thingsboard credentials and prevents the program from crashing.
 try:
     with open(TB_CREDENTIALS_FILE, 'r') as f:
         TB_DEVICE_TOKENS = json.load(f)
@@ -58,13 +56,15 @@ except FileNotFoundError:
     print(f"⚠ Warning: {TB_CREDENTIALS_FILE} not found.")
     TB_DEVICE_TOKENS = {}
 
+
+
 # ============================================================================
 # REAL DATA FETCHERS
 # ============================================================================
 
 def fetch_opensensemap_data():
     """REAL DATA: Fetch from OpenSenseMap API"""
-    print("📡 OPENSENSEMAP [REAL DATA]")
+    print("OPENSENSEMAP [REAL DATA]")
     
     for box_id in OPENSENSEMAP_BOX_IDS:
         try:
@@ -123,22 +123,22 @@ def fetch_opensensemap_data():
                             continue
             
             if measurements:
-                print(f"  ✓ Fetched {len(measurements)} measurements")
+                print(f"Fetched {len(measurements)} measurements")
                 for m in measurements:
                     print(f"    - {m['sensor_type']}: {m['value']} {m['unit']}")
                 return measurements
                 
         except Exception as e:
-            print(f"  ✗ Box {box_id[:8]}... error: {e}")
+            print(f"Box {box_id[:8]}... error: {e}")
             continue
     
-    print("  ⚠ All boxes failed")
+    print(" All boxes failed")
     return []
 
 
 def fetch_mobilithek_dormagen_data():
     """REAL DATA: Fetch from Mobilithek Dormagen (sensor.community)"""
-    print("\n📡 MOBILITHEK DORMAGEN [REAL DATA]")
+    print("\n MOBILITHEK DORMAGEN [REAL DATA]")
     
     try:
         # sensor.community API - get sensors in Dormagen area
@@ -205,8 +205,8 @@ def fetch_mobilithek_dormagen_data():
                         continue
         
         if measurements:
-            print(f"  ✓ Found {len(sensors_found)} sensors")
-            print(f"  ✓ Fetched {len(measurements)} measurements")
+            print(f"   Found {len(sensors_found)} sensors")
+            print(f"   Fetched {len(measurements)} measurements")
             
             # Show sample
             for m in measurements[:5]:
@@ -226,7 +226,7 @@ def fetch_mobilithek_dormagen_data():
 
 def fetch_open_meteo_egypt_data():
     """REAL DATA: Fetch from Open-Meteo Egypt"""
-    print("\n📡 OPEN-METEO EGYPT [REAL DATA]")
+    print("\n OPEN-METEO EGYPT [REAL DATA]")
     
     try:
         url = "https://api.open-meteo.com/v1/forecast"
@@ -304,14 +304,14 @@ def fetch_open_meteo_egypt_data():
             }
         ]
         
-        print(f"  ✓ Fetched {len(measurements)} measurements")
+        print(f"   Fetched {len(measurements)} measurements")
         for m in measurements:
             print(f"    - {m['sensor_type']}: {m['value']} {m['unit']}")
         
         return measurements
         
     except Exception as e:
-        print(f"  ✗ Error: {e}")
+        print(f"   Error: {e}")
         return []
 
 
@@ -340,18 +340,19 @@ def push_to_influxdb(measurements):
         client.close()
         return True
     except Exception as e:
-        print(f"  ✗ InfluxDB error: {e}")
+        print(f"   InfluxDB error: {e}")
         return False
 
 
 def push_to_frost(measurements):
-    """PLATFORM B: Push to FROST Server"""
+    """PLATFORM B: Push to FROST Server (connectivity check only)"""
     try:
         # Check if FROST is accessible
         response = requests.get(f"{FROST_URL}/Things", timeout=5)
         if response.status_code == 200:
-            # FROST is working, but detailed implementation would require
-            # creating Things, Datastreams, etc. first (use frost_data_loader.py)
+            # NOTE: This only verifies FROST is reachable
+            # Actual data upload requires creating Things/Datastreams first
+            # Use frost_data_loader.py for full FROST integration
             return True
         return False
     except:
@@ -384,7 +385,7 @@ def push_to_thingsboard(source, measurements):
         return True
         
     except Exception as e:
-        print(f"  ✗ Thingsboard error: {e}")
+        print(f"   Thingsboard error: {e}")
         return False
 
 
@@ -402,7 +403,7 @@ def load_data_cycle():
     print("="*70 + "\n")
     
     # REAL DATA SOURCES
-    print("🌟 REAL DATA SOURCES:")
+    print(" REAL DATA SOURCES:")
     print("-" * 70)
     
     all_measurements = []
@@ -414,11 +415,11 @@ def load_data_cycle():
         
         print("\n  Pushing to platforms:")
         if push_to_influxdb(osm_data):
-            print("    ✓ InfluxDB")
+            print("     InfluxDB")
         if push_to_frost(osm_data):
-            print("    ✓ FROST")
+            print("     FROST")
         if push_to_thingsboard('OpenSenseMap', osm_data):
-            print("    ✓ Thingsboard")
+            print("     Thingsboard")
     
     # Source 2: Mobilithek Dormagen
     mobilithek_data = fetch_mobilithek_dormagen_data()
@@ -427,11 +428,11 @@ def load_data_cycle():
         
         print("\n  Pushing to platforms:")
         if push_to_influxdb(mobilithek_data):
-            print("    ✓ InfluxDB")
+            print("     InfluxDB")
         if push_to_frost(mobilithek_data):
-            print("    ✓ FROST")
+            print("     FROST")
         if push_to_thingsboard('Mobilithek Dormagen', mobilithek_data):
-            print("    ✓ Thingsboard")
+            print("     Thingsboard")
     
     # Source 3: Open-Meteo Egypt
     egypt_data = fetch_open_meteo_egypt_data()
@@ -440,14 +441,14 @@ def load_data_cycle():
         
         print("\n  Pushing to platforms:")
         if push_to_influxdb(egypt_data):
-            print("    ✓ InfluxDB")
+            print("     InfluxDB")
         if push_to_frost(egypt_data):
-            print("    ✓ FROST")
+            print("     FROST")
         if push_to_thingsboard('Open-Meteo Egypt', egypt_data):
-            print("    ✓ Thingsboard")
+            print("     Thingsboard")
     
     print("\n" + "="*70)
-    print(f"✓ Cycle complete - {len(all_measurements)} total measurements")
+    print(f" Cycle complete - {len(all_measurements)} total measurements")
     print("="*70 + "\n")
 
 
@@ -455,8 +456,8 @@ def main():
     print("\n" + "="*70)
     print("MIKROKLIMA HAMBURG - REAL DATA LOADER")
     print("="*70)
-    print("\n🌟 REAL DATA: OpenSenseMap | Mobilithek Dormagen | Open-Meteo Egypt")
-    print("📊 PLATFORMS: FROST | InfluxDB | Thingsboard\n")
+    print("\n REAL DATA: OpenSenseMap | Mobilithek Dormagen | Open-Meteo Egypt")
+    print(" PLATFORMS: FROST | InfluxDB | Thingsboard\n")
     
     load_data_cycle()
 
